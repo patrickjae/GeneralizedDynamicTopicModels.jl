@@ -1,2 +1,2 @@
 # GeneralizedDynamicTopicModels.jl
-Generalized Dynamic Topic Models using Gaussian Processes
+Dynamic Topic Models generalized to arbitrary Gaussian Processes
