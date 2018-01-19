@@ -296,6 +296,10 @@ function test(m::GDTM)
 	-exp(test_ll/total_token_count)
 end
 
+"""
+Performs a grid search over the parameter space for various kernels (Brownian motion, Cauchy, Ornstein-Uhlenbeck, RBF),
+runs the corresponding models and stores the results.
+"""
 function run_param_gridsearch(batch_size, m_0, s_0, s_x, corpus; visualize=false, num_inducing_points=3, use_seeding=false)
 	# different numer of topics
 	dims = [5,10]
@@ -351,6 +355,29 @@ function run_param_gridsearch(batch_size, m_0, s_0, s_x, corpus; visualize=false
 	end
 end
 
+
+"""
+Runs a single model based on the corpus, kernel, number of topics, Dirichlet hyperparameter alpha and optional parameters provided.
+Stores the result in the current directory under subdirectory "experiments" and creates topic visualizations.
+The optional parameters are:
+* prior_mean, prior_variance: prior mean and variance for topics
+* measurement_noise: measurement noise when drawing time marginals from the stochastic process
+* minibatch_size: mini batch size for stochastic algorithm
+* inducing_points: number of inducing points for sparse GP
+* visualize: if set to true, create probability trajectory charts for top words in topics, report learning rate, e-step (based on the mini batch) and m-step (global optimization step) log likelihoods and test set log likelihoods graphically
+* use_seeding: use random documents to seed topics, for each topic at each time step, words in a random document (with appropriate time stamp) are used to artificially increase the probabilities of them in the current topic
+"""
+function run_model(corpus::CorpusUtils.Corpus, kernel::Kernels.Kernel, num_topics::Int64, alpha::Float64; prior_mean::Float64 = 0., prior_variance::Float64 = 10.,  measurement_noise::Foat64 = .5, minibatch_size::Int64 = 256, inducing_points::Int64 = 25, visualize::Bool = false, use_seeding::Bool = false)
+	m = GDTM(corpus, num_topics, batch_size, prior_mean, prior_variance, measurement_noise, alpha, visualize, seeded=use_seeding)
+	m.krn = kernel
+	GPDTM.gpdtm_svi_inference(m, inducing_points)
+	out_dir = GPDTM.write_stats(m)
+	if visualize
+		GPDTM.make_topic_charts(out_dir, corpus, true, false)
+	end
+end
+
+
 """
 Runs all three kernels on the provided dataset for different parameter settings.
 The data is expected in the following format:
@@ -367,14 +394,8 @@ The data is expected in the following format:
 #{types in document N_2} #{type id}:#{frequency} #{type id}:#{frequency} ...
 #{repeat for all timestamps}
 """
-function main(lexicon_file::String, corpus_file::String)
-	corpus = CorpusUtils.create_corpus(lexicon_file, corpus_file)
-	minibatch = 256
-	m_0 = 0.
-	s_0 = 10.
-	s_x = .5
-	inducing_points = 25
-	run_param_gridsearch(minibatch, m_0, s_0, s_x, corpus, num_inducing_points=inducing_points)
+function main(corpus::CorpusUtils.Corpus; minibatch_size::Int64 = 256, prior_mean::Float64 = 0., prior_variance::Float64 = 10., measurement_noise::Foat64 = .5, inducing_points::Int64 = 25)
+	run_param_gridsearch(minibatch_size, prior_mean, prior_variance, measurement_noise, corpus, num_inducing_points=inducing_points)
 end
 
 end # module
