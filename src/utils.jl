@@ -259,6 +259,7 @@ function write_stats(m::GDTM; base_dir_suffix::String="", topics_only::Bool=fals
 	serialize(kernel_file, m.krn)
 	close(kernel_file)
 	write_topic_distribution(m, base_dir)
+	base_dir
 end
 
 
