@@ -1,7 +1,7 @@
 # GeneralizedDynamicTopicModels.jl
 GeneralizedDynamicTopicModels allow for arbitrary Gaussian Process (GP) priors on the drift of topics in Dynamic Topic Models as described by [1] (which only allows for a Brownian motion prior).
 Further, it introduces a scalable inference algorithm based on Stochastic Variational Inference for GPs based on [2].
-This package accompanies the AISTATS2018 paper [3] and is written in Julia.
+This package accompanies our AISTATS2018 paper [3] and is written in Julia.
 
 # Installation
 Installation should work with the Julia-integrated package manager. 
