@@ -38,6 +38,7 @@ The corpus file can be constructed by
 		1. print number of unique word types ![](http://latex.codecogs.com/svg.latex?N_d) in document ![](http://latex.codecogs.com/svg.latex?d) 
 		2. for each word type ![](http://latex.codecogs.com/svg.latex?w_n), print _space_![](http://latex.codecogs.com/svg.latex?w_n):![](http://latex.codecogs.com/svg.latex?\text{freq}(w_n))
 		3. print _line break_
+		
 ![](http://latex.codecogs.com/svg.latex?w_n) denotes the ID of the word type, i.e. the line number (-1) in the lexicon file.
 
 A sample corpus file could look like
