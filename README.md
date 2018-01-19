@@ -31,14 +31,14 @@ The lexicon file contains the vocabulary used in the corpus. The line number enc
 ### Corpus file
 The corpus file can be constructed by
 1. print the number of timestamps $T$ in the corpus as an integer value _line break_
-2. for each timestamp $t \in \{1,\ldots,T\}$:
+2. for each timestamp $`t \in \{1,\ldots,T\}`$:
 	1. print timestamp (in number of seconds since 1.1.1970, may be negative) _line break_
-	2. print number of documents $D_t$ in timestamp $t$ _line break_
-	3. for each document $d \in \{1,\ldots,D_t\}$:
-		1. print number of unique word types $N_d$ in document $d$
-		2. for each word type $w_n$, print _space_$w_n$:$\text{freq}(w_n)$
+	2. print number of documents $`D_t`$ in timestamp $`t`$ _line break_
+	3. for each document $`d \in \{1,\ldots,D_t\}`$:
+		1. print number of unique word types $`N_d`$ in document $`d`$
+		2. for each word type $`w_n`$, print _space_$`w_n`$:$`\text{freq}(w_n)`$
 		3. print _line break_
-$w_n$ denotes the ID of the word type, i.e. the line number (-1) in the lexicon file.
+$`w_n`$ denotes the ID of the word type, i.e. the line number (-1) in the lexicon file.
 
 A sample corpus file could look like
 ```
