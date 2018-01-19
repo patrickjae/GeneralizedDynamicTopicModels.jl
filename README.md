@@ -38,7 +38,7 @@ The corpus file can be constructed by
 		1. print number of unique word types ![](http://latex.codecogs.com/svg.latex?N_d) in document ![](http://latex.codecogs.com/svg.latex?d) 
 		2. for each word type ![](http://latex.codecogs.com/svg.latex?w_n), print _space_![](http://latex.codecogs.com/svg.latex?w_n):![](http://latex.codecogs.com/svg.latex?\text{freq}(w_n))
 		3. print _line break_
-		
+
 ![](http://latex.codecogs.com/svg.latex?w_n) denotes the ID of the word type, i.e. the line number (-1) in the lexicon file.
 
 A sample corpus file could look like
@@ -122,6 +122,7 @@ This method uses four different kernels
 - Cauchy
 - Ornstein-Uhlenbeck
 - RBF
+
 and computes models for different parameter settings and kernel hyperparameters.
 Results are stored in subdirectories of "experiments", e.g. "experiments/BM". Probability trajectories of top words in topics can be created using a call to
 ```GPDTM.make_all_charts(path, corpus, save_images)```
@@ -161,5 +162,7 @@ and explicitly providing type information on the kernel (i.e. the type create fo
 ## References
 
 [1] Wang, C., Blei, D. M., & Heckerman, D. (2008). Continuous Time Dynamic Topic Models. UAI
+
 [2] Hensman, J., Fusi, N., & Lawrence, N. D. (2013). Gaussian Processes for Big Data. UAI.
+
 [3] Jähnichen, P., Wenzel, F., Kloft, M., & Mandt, S. (2018). Scalable Generalized Dynamic Topic Models. AISTATS.
