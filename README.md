@@ -1,7 +1,7 @@
 # GeneralizedDynamicTopicModels.jl
-GeneralizedDynamicTopicModels allow for arbitrary Gaussian Process (GP) priors on the drift of topics in Dynamic Topic Models as described by \citep{Wang:2008vwb} (which only allows for a Brownian motion prior).
-Further, it introduces a scalable inference algorithm based on Stochastic Variational Inference for GPs based on \citep{Hensman:2013tn}.
-This package accompanies the AISTATS2018 paper \citep{Jahnichen:2018wx} and is written in Julia.
+GeneralizedDynamicTopicModels allow for arbitrary Gaussian Process (GP) priors on the drift of topics in Dynamic Topic Models as described by [1] (which only allows for a Brownian motion prior).
+Further, it introduces a scalable inference algorithm based on Stochastic Variational Inference for GPs based on [2].
+This package accompanies the AISTATS2018 paper [3] and is written in Julia.
 
 # Installation
 Installation should work with the Julia-integrated package manager. 
@@ -156,3 +156,9 @@ Note that we have not yet conducted exhaustive experiments with the rational qua
 Additionall kernel can be simply added by defining a type for the kernel that is a subtype of ```Kernels.Kernel``` and implementing the method
 ```Kernels.computeCovariance(kernel, x, x_prime)```
 and explicitly providing type information on the kernel (i.e. the type create for this kernel). ```x``` and ```x_prime``` are vectors of ```Float64``` and the method should return a ```Float64``` value.
+
+## References
+
+[1] Wang, C., Blei, D. M., & Heckerman, D. (2008). Continuous Time Dynamic Topic Models. UAI
+[2] Hensman, J., Fusi, N., & Lawrence, N. D. (2013). Gaussian Processes for Big Data. UAI.
+[3] Jähnichen, P., Wenzel, F., Kloft, M., & Mandt, S. (2018). Scalable Generalized Dynamic Topic Models. AISTATS.
