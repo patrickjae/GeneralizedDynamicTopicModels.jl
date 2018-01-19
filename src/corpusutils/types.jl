@@ -33,4 +33,10 @@ end
 type Corpus{T<:Union{DocumentList, DynamicData.DynamicDataSet{Document, DateTime}}}
 	documents::T
 	lexicon::Lexicon
+
+	function Corpus()
+		new(T(), CorpusUtils.Lexicon())
+	end
 end
+
+typealias DynamicCorpus Corpus{DynamicData.DynamicDataSet{Document, DateTime}}
