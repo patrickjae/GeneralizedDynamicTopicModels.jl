@@ -1,6 +1,5 @@
-function make_all_charts(parent_directory::String, corpus_file::String, lexicon_file::String, save_images::Bool; show_images::Bool=false)
+function make_all_charts(parent_directory::String, corpus::CorpusUtils.Corpus, save_images::Bool; show_images::Bool=false)
 	if save_images Plots.plotlyjs() elseif show_images Plots.plotly() end
-	corpus = CorpusUtils.create_corpus(lexicon_file, corpus_file)
 	all_tokens = sum(map(d -> sum(values(d.value)), corpus.documents))
 	info("all tokens: $all_tokens")
 	all_likelihoods = Plots.plot(title="ELBOs", size=(1024, 768), ylabel="lower bound on marginal likelihood", xlabel="# documents seen")
