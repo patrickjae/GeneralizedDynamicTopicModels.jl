@@ -370,7 +370,7 @@ The optional parameters are:
 * visualize: if set to true, create probability trajectory charts for top words in topics, report learning rate, e-step (based on the mini batch) and m-step (global optimization step) log likelihoods and test set log likelihoods graphically
 * use_seeding: use random documents to seed topics, for each topic at each time step, words in a random document (with appropriate time stamp) are used to artificially increase the probabilities of them in the current topic
 """
-function run_model(corpus::CorpusUtils.Corpus, kernel::Kernels.Kernel, num_topics::Int64, alpha::Float64; prior_mean::Float64 = 0., prior_variance::Float64 = 10.,  measurement_noise::Foat64 = .5, minibatch_size::Int64 = 256, inducing_points::Int64 = 25, visualize::Bool = false, use_seeding::Bool = false)
+function run_model(corpus::CorpusUtils.Corpus, kernel::Kernels.Kernel, num_topics::Int64, alpha::Float64; prior_mean::Float64 = 0., prior_variance::Float64 = 10.,  measurement_noise::Float64 = .5, minibatch_size::Int64 = 256, inducing_points::Int64 = 25, visualize::Bool = false, use_seeding::Bool = false)
 	m = GDTM(corpus, num_topics, batch_size, prior_mean, prior_variance, measurement_noise, alpha, visualize, seeded=use_seeding)
 	m.krn = kernel
 	GPDTM.gpdtm_svi_inference(m, inducing_points)
@@ -397,7 +397,7 @@ The data is expected in the following format:
 #{types in document N_2} #{type id}:#{frequency} #{type id}:#{frequency} ...
 #{repeat for all timestamps}
 """
-function main(corpus::CorpusUtils.Corpus; minibatch_size::Int64 = 256, prior_mean::Float64 = 0., prior_variance::Float64 = 10., measurement_noise::Foat64 = .5, inducing_points::Int64 = 25)
+function main(corpus::CorpusUtils.Corpus; minibatch_size::Int64 = 256, prior_mean::Float64 = 0., prior_variance::Float64 = 10., measurement_noise::Float64 = .5, inducing_points::Int64 = 25)
 	run_param_gridsearch(minibatch_size, prior_mean, prior_variance, measurement_noise, corpus, num_inducing_points=inducing_points)
 end
 
