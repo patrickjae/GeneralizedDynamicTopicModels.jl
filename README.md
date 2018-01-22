@@ -7,7 +7,7 @@ This package accompanies our AISTATS2018 paper [3] and is written in Julia.
 Installation should work with the Julia-integrated package manager. 
 From the Julia REPL, simply issue the command
 ```
-Pkg.add("https://github.com/patrickjae/GeneralizedDynamicTopicModels.jl")
+Pkg.clone("https://github.com/patrickjae/GeneralizedDynamicTopicModels.jl")
 ```
 and you should be good to go.
 ```using GeneralizedDynamicTopicModels```imports the necessary modules (GeneralizedDynamicTopicModels, CorpusUtils, DynamicData)
