@@ -146,10 +146,13 @@ function e_step(m::GDTM, data_idx::Vector{Int64})
 		Ξ[k] = zeros(m.T, m.V)
 	end
 	timestamps_seen = IntSet()
+	doc_topic_proportions = zeros(length(data_idx), m.K)
 	for (i, doc_idx) in enumerate(data_idx)
-		e_step_ll += doc_e_step(m, doc_idx, ɸ, Ξ, timestamps_seen)
+		(doc_ll, λ) = doc_e_step(m, doc_idx, ɸ, Ξ, timestamps_seen)
+		e_step_ll += doc_ll
+		doc_topic_proportions[i,:] = λ
 	end
-	(e_step_ll, ɸ, Ξ, words_seen, collect(timestamps_seen))
+	(e_step_ll, ɸ, Ξ, words_seen, collect(timestamps_seen), doc_topic_proportions)
 end
 
 
@@ -172,7 +175,7 @@ function doc_e_step(m::GDTM, doc_idx::Int64, ɸ::Array{Vector{Float64},1}, Ξ::A
 			Ξ[k][t_doc, w] += freqs[i]*φ[i,k]
 		end
 	end
-	vi_ll
+	(vi_ll, λ)
 end
 
 """

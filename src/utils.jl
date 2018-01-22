@@ -259,6 +259,7 @@ function write_stats(m::GDTM; base_dir_suffix::String="", topics_only::Bool=fals
 	serialize(kernel_file, m.krn)
 	close(kernel_file)
 	write_topic_distribution(m, base_dir)
+	write_document_distribution(m, base_dir)
 	base_dir
 end
 
@@ -274,6 +275,33 @@ function write_topic_distribution(m::GDTM, base_dir::String)
 	close(f)
 end
 
+function read_topic_distribution(td_file::String)
+	f = open(td_file, "r")
+	K = read(f, Int64)
+	tp = Vector{Array}(K)
+	for k in 1:K
+		tp[k] = read_array(f)
+	end
+	close(f)
+	tp
+end
+
+function write_document_distribution(m::GDTM, base_dir::String)
+	f = open(joinpath(base_dir, "documents.dat"), "w")
+	# get distributions over topics for all documents
+	document_proportions = GDTM.e_step(m, collect(1:m.D))
+	# write the array
+	write_array(document_proportions, f)
+	close(f)
+end
+
+function read_document_distribution(dd_file::String)
+	f = open(dd_file, "r")
+	dd = read_array(f)
+	close(f)
+	dd
+end
+
 function write_array(a, f)
 	s = size(a)
 	write(f, length(s))
@@ -285,17 +313,6 @@ function read_array(f)
 	num_dims = read(f, Int64)
 	dims = tuple(read(f, Int64, num_dims)...)
 	read(f, Float64, dims)
-end
-
-function read_topic_distribution(td_file::String)
-	f = open(td_file, "r")
-	K = read(f, Int64)
-	tp = Vector{Array}(K)
-	for k in 1:K
-		tp[k] = read_array(f)
-	end
-	close(f)
-	tp
 end
 
 

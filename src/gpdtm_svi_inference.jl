@@ -169,7 +169,7 @@ function inference_svi_gp(m::GDTM, num_inducing; rand_inducing::Bool=false, norm
 		push!(m.learning_rates, lr)
 
 		#do local udpate step (termed "e-step")
-		(online_bound, ss_tk, ss_tkx, words_seen, t_mb) = e_step(m, mb_idx)
+		(online_bound, ss_tk, ss_tkx, words_seen, t_mb, _) = e_step(m, mb_idx)
 		# multiply bound estimate by multiplier
 		online_bound *= mult
 		# estimate of document specific bound for whole corpus
