@@ -37,6 +37,10 @@ type Corpus{T<:Union{DocumentList, DynamicData.DynamicDataSet{Document, DateTime
 	function Corpus()
 		new(T(), CorpusUtils.Lexicon())
 	end
+
+	function Corpus{T<:Union{DocumentList, DynamicData.DynamicDataSet{Document, DateTime}}(docs::Union{DocumentList, DynamicData.DynamicDataSet{Document, DateTime}}, lex::Lexicon)
+		new(docs, lex)
+	end
 end
 
 typealias DynamicCorpus Corpus{DynamicData.DynamicDataSet{Document, DateTime}}
