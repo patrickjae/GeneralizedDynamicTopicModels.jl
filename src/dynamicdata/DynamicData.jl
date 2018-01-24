@@ -103,8 +103,6 @@ function remove!{D,T}(d::DynamicDataSet{D,T}, dp::DataPoint{D,T})
 end
 
 function remove!{D,T}(d::DynamicDataSet{D,T}, dp_id::Int64)
-	# subset_pos = findin(d.data_indexes[d.data_points[dp_id].timestamp], [d.data_points[dp_id]])[1]
-	# deleteat!(d.data_indexes[d.data_points[dp_id].timestamp], subset_pos)
 	d.data_indexes[d.data_points[dp_id].timestamp] = setdiff(d.data_indexes[d.data_points[dp_id].timestamp], [d.data_points[dp_id]])
 	deleteat!(d.data_points, dp_id)
 end
@@ -165,7 +163,7 @@ get_timestamp_index_for_datapoint(d::DynamicDataSet, dp_index::Int64) = d.revers
 """
 Gets the timestamp indexes of a given index set of data points.
 """
-function get_timestamp_indexes_for_subset(d::DynamicDataSet, ids::Array{Int64, 1})
+function get_timestamp_indexes_for_subset(d::DynamicDataSet, ids::Vector{Int64})
 	timestamp_ids = Array(Int64, length(ids))
 	for (i,dp) in enumerate(d[ids])
 		timestamp_ids[i] = d.reverse_time_dict[dp.timestamp]
@@ -177,7 +175,7 @@ end
 Gets the timestamp indexes for a given array of elements of type DataPoint.
 """
 function get_timestamp_indexes_for_subset{D,T}(d::DynamicDataSet{D,T}, dps::Vector{DataPoint{D,T}})
-	timestamp_ids = Array(Int64, length(dps))
+	timestamp_ids = Vector{Int64}(length(dps))
 	for (i, dp) in enumerate(dps)
 		timestamp_ids[i] = d.reverse_time_dict[dp.timestamp]
 	end

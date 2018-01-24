@@ -110,7 +110,7 @@ Having loaded the corpus data, the model can be run in different ways.
 
 ### Doing a parameter grid search
 With a call to
-```GPDTM.main(corpus)```
+```GeneralizedDynamicTopicModels.main(corpus)```
 the model can be run directly. Additional parameters that can be used include
 - prior_mean, prior_variance: the topic prior hyperparameters, default: 0.0, 10.0
 - measurement_noise: the variance used when drawing words from the time marginal of the process, default: 0.5
@@ -125,17 +125,17 @@ This method uses four different kernels, corresponding to different covariance f
 
 and computes models for different parameter settings and kernel hyperparameters.
 Results are stored in subdirectories of "experiments", e.g. "experiments/BM". Probability trajectories of top words in topics can be created using a call to
-```GPDTM.make_all_charts(path, corpus, save_images)```
+```GeneralizedDynamicTopicModels.make_all_charts(path, corpus, save_images)```
 where path should point to one of the created subdirectories of "experiments", e.g. "experiments/BM".
 The boolean "save_images" determines whether the charts are saved as PDF files. Charts for training and test set ELBO are always created.
 An optional keyword parameter "show_images" can be added to the function call with 
-```GPDTM.make_all_charts(path, corpus, save_images, show_images=true)```
+```GeneralizedDynamicTopicModels.make_all_charts(path, corpus, save_images, show_images=true)```
 to display the charts directly.
 
 
 ### Running a single model
 If you want to do your own set of experiments, use a call to
-```GPDTM.run_model(corpus, kernel, num_topics, alpha)```
+```GeneralizedDynamicTopicModels.run_model(corpus, kernel, num_topics, alpha)```
 and provide the corpus, a kernel object (see below), the number of topics to use and the alpha hyperparameter to the Dirichlet prior to the topic proportions of a document.
 
 Additional keyword parameters are 
@@ -156,10 +156,20 @@ Up to now, the following kernels have been implemented:
 5. Constant Kernel ```Kernels.ConstantKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2) (which is used to populate the whole covariance matrix), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2)
 6. Periodic Kernel ```Kernels.PeriodicRBFKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2), length scale parameter ![](http://latex.codecogs.com/svg.latex?\ell) and period parameter ![](http://latex.codecogs.com/svg.latex?p), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2\exp\left(-2\frac{\sin\left(\frac{||x-x^\prime||}{p}\right)^2}{\ell^2}\right))
 
-Note that we have not yet conducted exhaustive experiments with the rational quadratic and the periodic kernels. Especially the latter has show to be extremely instable and thus probably needs a fair amount of parameter tuning.
-Additionall kernel can be simply added by defining a type for the kernel that is a subtype of ```Kernels.Kernel``` and implementing the method
-```Kernels.computeCovariance(kernel, x, x_prime)```
-and explicitly providing type information on the kernel (i.e. the type create for this kernel). ```x``` and ```x_prime``` are vectors of ```Float64``` and the method should return a ```Float64``` value.
+Note that we have not yet conducted exhaustive experiments with the rational quadratic and the periodic kernels. 
+Especially the latter has show to be extremely instable and thus probably needs a fair amount of parameter tuning.
+Additional kernels can be simply added by defining a type for the kernel that is a subtype of ```Kernels.Kernel```, e.g.
+```
+type MyFancyKernel <: Kernel
+	parameters::Vector{Float64}
+	MyFancyKernel(param1::Float64, param2::Float64) = new([param1, param2])
+end
+```
+and implementing the method ```Kernels.computeCovariance(kernel, x, x_prime)``` and explicitly providing type information on the kernel (i.e. the type create for this kernel). ```x``` and ```x_prime``` are vectors of ```Float64``` and the method should return a ```Float64``` value, i.e.
+```
+computeCovariance(k::MyFancyKernel, x::Vector{Float64}, x_prime::Vector{Float64}) = some function of x, x_prime and k.parameters
+```
+
 
 ## References
 

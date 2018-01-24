@@ -2,7 +2,7 @@ include("kernels.jl")
 include("dynamicdata/DynamicData.jl")
 include("corpusutils/CorpusUtils.jl")
 module GeneralizedDynamicTopicModels
-using GeneralizedDynamicTopicModels, Distributions, Plots, Kernels, DynamicData, CorpusUtils
+using GeneralizedDynamicTopicModels, Distributions, Plots, Kernels, DynamicData, CorpusUtils, SpecialFunctions
 typealias DocumentData Union{CorpusUtils.DocumentList, DynamicData.DynamicDataSet}
 type GDTM
 	m_0::Float64 #prior mean
@@ -159,7 +159,7 @@ end
 """
 Performs the e-step on individual documents.
 """
-function doc_e_step(m::GDTM, doc_idx::Int64, ɸ::Array{Vector{Float64},1}, Ξ::Array{Matrix{Float64},1}, timestamps_seen::IntSet)
+function doc_e_step(m::GDTM, doc_idx::Int64, ɸ::Vector{Vector{Float64}}, Ξ::Vector{Matrix{Float64}}, timestamps_seen::IntSet)
 	doc = m.corpus.documents[doc_idx]
 	#extract wird ids and frequencies from the document
 	(doc_words, freqs) = CorpusUtils.get_words_and_counts(doc.value)
@@ -181,7 +181,7 @@ end
 """
 Perform variational inference on document parameters, i.e. proportions of topics in the document and single word assignment probabilities.
 """
-function document_inference(m, t_doc::Int64, doc_words::Vector{Int64}, freqs::Vector{Int64})
+function document_inference(m::GDTM, t_doc::Int64, doc_words::Vector{Int64}, freqs::Vector{Int64})
 	last_vi_ll = -1e100
 	vi_ll = 0
 	converged = 1
@@ -303,16 +303,12 @@ end
 Performs a grid search over the parameter space for various kernels (Brownian motion, Cauchy, Ornstein-Uhlenbeck, RBF),
 runs the corresponding models and stores the results.
 """
-function run_param_gridsearch(batch_size, m_0, s_0, s_x, corpus; visualize=false, num_inducing_points=3, use_seeding=false)
-	# different numer of topics
-	dims = [5,10]
-	# for experiments, alpha is set .5
-	alphas = [.5]
+function run_param_gridsearch(batch_size::Int64, m_0::Float64, s_0::Float64, s_x::Float64, corpus::CorpusUtils.Corpus; visualize::Bool=false, num_inducing_points::Int64=25, use_seeding::Bool=false, num_topics::Vector{Int64}=[5,10], alphas::Vector{Float64}=[.5])
 
 	inference_function = (m) -> inference_svi_gp(m, num_inducing_points)
 
-	for alpha in alphas, dim in dims
-		m = GDTM(corpus, dim, batch_size, m_0, s_0, s_x, alpha, visualize, seeded=use_seeding)
+	for alpha in alphas, k in num_topics
+		m = GDTM(corpus, k, batch_size, m_0, s_0, s_x, alpha, visualize, seeded=use_seeding)
 		range = m.times[end] - m.times[1]
 		# effective pre-factor for maximum variance of one in the Brownian motion kernel
 		suggested_variance = 1./range
