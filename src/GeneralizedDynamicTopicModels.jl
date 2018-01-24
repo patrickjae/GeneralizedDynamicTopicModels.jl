@@ -191,7 +191,7 @@ function document_inference(m::GDTM, t_doc::Int64, doc_words::Vector{Int64}, fre
 	φ = ones(length(doc_words), m.K) ./ m.K
 	#init lambda for doc
 	λ = ones(m.K) .* m.alpha .+ N_d./m.K
-	dig_λ = digamma(λ)
+	dig_λ = digamma.(λ)
 	dig_λ_sum = digamma(sum(λ))
 
 	iter = 0
@@ -215,7 +215,7 @@ function document_inference(m::GDTM, t_doc::Int64, doc_words::Vector{Int64}, fre
 		end
 		#update lambda
 		λ = m.alpha .+ vec(sum(freqs.*φ,1))
-		dig_λ = digamma(λ)
+		dig_λ = digamma.(λ)
 		dig_λ_sum = digamma(sum(λ))
 
 		#compute the document likelihood given the current parameters
@@ -234,12 +234,12 @@ Computes the document likelihood given some paramter setting.
 """
 function compute_document_likelihood(m::GDTM, t_doc::Int64, doc_words::Vector{Int64}, freqs::Vector{Int64}, φ::Matrix{Float64}, λ::Vector{Float64}, means::Matrix{Float64})
 	likelihood = 0
-	dig_λ = digamma(λ)
+	dig_λ = digamma.(λ)
 	dig_λ_sum = digamma(sum(λ))
 	for k in 1:m.K
 		likelihood += sum(freqs .* φ[:,k] .* (dig_λ[k] .- dig_λ_sum .+ means[k,:] .- m.zeta[k,t_doc] - log(φ[:,k])))
 	end
-	likelihood += sum(lgamma(λ)) - lgamma(sum(λ)) + sum( (m.alpha .- λ) .* (dig_λ .- dig_λ_sum))
+	likelihood += sum(lgamma.(λ)) - lgamma(sum(λ)) + sum( (m.alpha .- λ) .* (dig_λ .- dig_λ_sum))
 	likelihood
 end
 
@@ -280,7 +280,7 @@ function test(m::GDTM)
 		end
 
 		phi = zeros(length(w_2), m.K)
-		dig_λ = digamma(theta)
+		dig_λ = digamma.(theta)
 		dig_λ_sum = digamma(sum(theta))
 		for i in 1:length(w_2)
 			log_phi_sum = 0
