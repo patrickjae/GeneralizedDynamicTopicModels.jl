@@ -285,7 +285,7 @@ end
 function create_corpus(lexicon_file::String, corpus_file::String)
 	l = CorpusUtils.read_lexicon(lexicon_file)
 	c = CorpusUtils.read_sequential_corpus(corpus_file, l)
-	CorpusUtils.Corpus(c,l)
+	CorpusUtils.Corpus{DynamicData.DynamicDataSet{Document, DateTime}}(c,l)
 end
 
 function used_in_times(c::Corpus, w::Word)
