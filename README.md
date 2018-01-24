@@ -108,7 +108,7 @@ To read in a corpus saved this way, use the procedure as described above.
 ## Running the model
 Having loaded the corpus data, the model can be run in different ways.
 
-### Doing a grid search
+### Doing a parameter grid search
 With a call to
 ```GPDTM.main(corpus)```
 the model can be run directly. Additional parameters that can be used include
@@ -117,7 +117,7 @@ the model can be run directly. Additional parameters that can be used include
 - minibatch_size: parameter for the stochastic algorithm, default: 256
 - inducing_points: number of inducing points used for the sparse GP approximation, default: 25
 
-This method uses four different kernels
+This method uses four different kernels, corresponding to different covariance function (see below)
 - Brownian motion
 - Cauchy
 - Ornstein-Uhlenbeck
@@ -145,14 +145,16 @@ Additional keyword parameters are
 
 
 ## Kernels
-The Kernels module provides the different kernels that can be used in the model.
+The Kernels module provides different kernels that are used to define the stochastic process prior over time. 
+W.l.o.g. different GP priors are fully defined by different kernel (or covariance) functions ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)).
 Up to now, the following kernels have been implemented:
-1. Brownian Kernel ```Kernels.BrownianKernel``` with process variance parameter 
-2. Ornstein-Uhlenbeck Kernel ```Kernels.OrnsteinUhlenbeckKernel``` with process variance parameter and length scale
-3. Cauchy Kernel ```Kernels.CauchyKernel``` with process variance parameter and length scale
-4. Rational Quadratic Kernl ```Kernels.RationalQuadraticKernel``` with process variance parameter, length scale and alpha parameter (governing the weighting of large- and small-scale variations)
-5. Constant Kernel ```Kernels.ConstantKernel``` with process variance parameter (which is used to populate the whole covariance matrix)
-6. Periodic Kernel ```Kernels.PeriodicRBFKernel``` with process variance parameter, length scale parameter and period parameter
+1. Brownian Kernel ```Kernels.BrownianKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2\min(x,x^\prime))
+2. Ornstein-Uhlenbeck Kernel ```Kernels.OrnsteinUhlenbeckKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2) and length scale ![](http://latex.codecogs.com/svg.latex?\ell), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2\exp(-\frac{||x-x^\prime||}{\ell}))
+3. Cauchy Kernel ```Kernels.CauchyKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2) and length scale ![](http://latex.codecogs.com/svg.latex?\ell), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\frac{\sigma^2}{1+(\frac{||x-x^\prime||}{\ell})^2}))
+2. RBF Kernel ```Kernels.RBFKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2) and length scale ![](http://latex.codecogs.com/svg.latex?\ell), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2\exp(-\frac{||x-x^\prime||^2}{2\ell^2}))
+4. Rational Quadratic Kernl ```Kernels.RationalQuadraticKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2), length scale ![](http://latex.codecogs.com/svg.latex?\ell) and alpha parameter ![](http://latex.codecogs.com/svg.latex?\alpha) (governing the weighting of large- and small-scale variations), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2(1+(\frac{||x-x^\prime||^2}{2\alpha\ell^2})^{-\alpha}))
+5. Constant Kernel ```Kernels.ConstantKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2) (which is used to populate the whole covariance matrix), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2))
+6. Periodic Kernel ```Kernels.PeriodicRBFKernel``` with process variance parameter ![](http://latex.codecogs.com/svg.latex?\sigma^2), length scale parameter ![](http://latex.codecogs.com/svg.latex?\ell) and period parameter ![](http://latex.codecogs.com/svg.latex?p), ![](http://latex.codecogs.com/svg.latex?\kappa(x,x^\prime)=\sigma^2\exp(-2\frac{\sin(\frac{||x-x^\prime||}{p})^2}{\ell^2}))
 
 Note that we have not yet conducted exhaustive experiments with the rational quadratic and the periodic kernels. Especially the latter has show to be extremely instable and thus probably needs a fair amount of parameter tuning.
 Additionall kernel can be simply added by defining a type for the kernel that is a subtype of ```Kernels.Kernel``` and implementing the method
