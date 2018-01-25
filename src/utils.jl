@@ -289,7 +289,7 @@ end
 function write_document_distribution(m::GDTM, base_dir::String)
 	f = open(joinpath(base_dir, "documents.dat"), "w")
 	# get distributions over topics for all documents
-	document_proportions = e_step(m, collect(1:m.D))
+	(_, _, _, _, _, document_proportions) = e_step(m, collect(1:m.D))
 	# write the array
 	write_array(document_proportions, f)
 	close(f)
