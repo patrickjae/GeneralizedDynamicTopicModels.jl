@@ -109,10 +109,8 @@ To read in a corpus saved this way, use the procedure as described above.
 Having loaded the corpus data, the model can be run in different ways.
 
 ### Doing a parameter grid search
-With a call to
-```GeneralizedDynamicTopicModels.main(corpus)```
+With a call to ```GeneralizedDynamicTopicModels.main(corpus)``` the model can be run directly. Additional parameters that can be used include.
 
-the model can be run directly. Additional parameters that can be used include
 - prior_mean, prior_variance: the topic prior hyperparameters, default: 0.0, 10.0
 - measurement_noise: the variance used when drawing words from the time marginal of the process, default: 0.5
 - minibatch_size: parameter for the stochastic algorithm, default: 256
