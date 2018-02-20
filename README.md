@@ -120,7 +120,7 @@ the model can be run directly. Additional parameters that can be used include.
 - minibatch_size: parameter for the stochastic algorithm, default: 256
 - inducing_points: number of inducing points used for the sparse GP approximation, default: 25
 
-This method uses four different kernels, corresponding to different covariance function (see below)
+This method uses four different kernels, corresponding to different covariance functions (see below)
 - Brownian motion
 - Cauchy
 - Ornstein-Uhlenbeck
