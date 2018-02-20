@@ -2,8 +2,8 @@ function make_all_charts(parent_directory::String, corpus::CorpusUtils.Corpus, s
 	if save_images Plots.plotlyjs() elseif show_images Plots.plotly() end
 	all_tokens = sum(map(d -> sum(values(d.value)), corpus.documents))
 	info("all tokens: $all_tokens")
-	all_likelihoods = Plots.plot(title="ELBOs", size=(1024, 768), ylabel="lower bound on marginal likelihood", xlabel="# documents seen")
-	all_test = Plots.plot(title="Predictive likelihood", ylabel="predictive likelihood", xlabel="# documents seen", size=(1024, 768), tickfont=font(14, "sans-serif"))
+	all_likelihoods = Plots.plot(title="ELBOs", size=(1024, 768), ylabel="lower bound on marginal likelihood", xlabel="# documents seen", guidefont=font(16, "sans-serif"), titlefont=font(18, "sans-serif"), tickfont=font(14, "sans-serif"))
+	all_test = Plots.plot(title="Predictive likelihood", ylabel="predictive likelihood", xlabel="# documents seen", size=(1024, 768),  guidefont=font(16, "sans-serif"), titlefont=font(18, "sans-serif"), tickfont=font(14, "sans-serif"))
 	efn = ""
 	ppx_values = Dict{String, Float64}()
 	for dir in readdir(parent_directory)
@@ -29,10 +29,10 @@ function make_all_charts(parent_directory::String, corpus::CorpusUtils.Corpus, s
 							    	my_kernel_name = replace(my_kernel_name, r"OrnsteinUhlenbeck", "Ornstein Uhlenbeck")
 							    	plot_label = "$my_kernel_name kernel"
 							    	(c, e) = tab_split(joinpath(num_topics_path, "elbo"))
-							    	Plots.plot!(all_likelihoods, c, e, label=plot_label, linewidth=2, legendfont=font(18, "sans-serif"))
+							    	Plots.plot!(all_likelihoods, c, e, label=plot_label, linewidth=2, legendfont=font(16, "sans-serif"))
 							    	(tc, tppx) = tab_split(joinpath(num_topics_path, "test"))
 							    	ppx_values[plot_label] = tppx[end]
-							    	Plots.plot!(all_test, tc, tppx, label=plot_label, linewidth=2, legendfont=font(18, "sans-serif"))
+							    	Plots.plot!(all_test, tc, tppx, label=plot_label, linewidth=2, legendfont=font(16, "sans-serif"))
 							    	make_topic_charts(num_topics_path, corpus, save_images, show_images)
 							    end
 							end
