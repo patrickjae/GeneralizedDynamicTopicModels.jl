@@ -37,7 +37,7 @@ type DataPoint{D, T}
 		new(-1, _t, _v)
 	end
 end
-typealias DataPoints{D,T} Vector{DataPoint{D,T}}
+DataPoints{D,T} = Vector{DataPoint{D,T}}
 
 """
 The DynamicDataSet consists of a set of DataPoints of a common value and timestamp types.

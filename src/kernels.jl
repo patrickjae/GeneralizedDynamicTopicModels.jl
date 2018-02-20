@@ -1,6 +1,6 @@
 module Kernels
 # super type
-abstract Kernel
+abstract type Kernel end
 
 # diferent kernels to use
 type RBFKernel <: Kernel

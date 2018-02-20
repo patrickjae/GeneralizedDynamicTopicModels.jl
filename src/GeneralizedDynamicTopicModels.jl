@@ -3,7 +3,7 @@ include("dynamicdata/DynamicData.jl")
 include("corpusutils/CorpusUtils.jl")
 module GeneralizedDynamicTopicModels
 using GeneralizedDynamicTopicModels, Distributions, Plots, Kernels, DynamicData, CorpusUtils, SpecialFunctions
-typealias DocumentData Union{CorpusUtils.DocumentList, DynamicData.DynamicDataSet}
+const DocumentData = Union{CorpusUtils.DocumentList, DynamicData.DynamicDataSet}
 type GDTM
 	m_0::Float64 #prior mean
 	s_0::Float64 #prior variance
